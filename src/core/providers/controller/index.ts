@@ -9,3 +9,4 @@ export * from './Controller';
 
 // Decorators
 export * from './decorators/routesBinder';
+export * from './decorators/parametersBinder';
