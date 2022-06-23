@@ -24,7 +24,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   }
 
   private getTargetName(target: GenericConstructor) {
-    return target.name;
+    return target ? target.name : false;
   }
 
   private extractMetaOptions<TVal>(metaOptions: MetaModel) {
@@ -34,7 +34,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const method = metaOptions.method ? { method: metaOptions.method } : {};
     const type = metaOptions.type ? { type: metaOptions.type } : {};
 
-    const id = this.getTargetName(targetConstructor);
+    const id = metaOptions.id;
 
     return {
       key,
@@ -48,28 +48,30 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
   /**
    *  Update Store
-   * @param configs Each handler config
+   * @param incomingMeta Each handler config
    */
-  protected updateStore(configs: MetaModel): void {
-    const constructorName = this.getTargetName(configs.targetConstructor);
+  protected updateStore(incomingMeta: MetaModel): void {
+    const constructorName = this.getTargetName(incomingMeta.targetConstructor);
 
     /// Get new meta data
     const metaData = new MetaModel(
-      configs.key,
-      configs.targetConstructor,
-      configs.constructorName ? configs.constructorName : undefined,
-      configs.value ? configs.value : undefined,
-      configs.method ? configs.method : undefined,
-      configs.type ? configs.type : undefined,
-      configs.id ? configs.id : undefined
+      incomingMeta.id,
+      incomingMeta.key,
+      incomingMeta.value,
+      incomingMeta.targetConstructor,
+      incomingMeta.constructorName,
+      incomingMeta.method,
+      incomingMeta.type
     );
 
     this.store.push({
-      ...(metaData.id ? { id: metaData.id } : {}),
-      constructorName,
+      id: metaData.id,
       key: metaData.key,
       value: metaData.value,
-      targetConstructor: metaData.targetConstructor,
+      ...(constructorName ? { constructorName } : {}),
+      ...(metaData.targetConstructor
+        ? { targetConstructor: metaData.targetConstructor }
+        : {}),
       ...(metaData.method ? { method: metaData.method } : {}),
       ...(metaData.type ? { type: metaData.type } : {}),
     });

@@ -8,7 +8,7 @@ import {
   ProvidersTypes,
   SiteWideKeys,
 } from '../../../types';
-import { Controller } from '../Controller';
+// import { Controller } from '../Controller';
 import { HttpMethods } from '../types';
 
 export let currentController: string = '';
@@ -16,18 +16,10 @@ export let currentController: string = '';
 /// Define route binder decorator
 const routesBinder = function (httpMethod: HttpMethods) {
   return function (url: string) {
-    return function (
-      constructor: any,
-      methodName: string,
-      _desc: HandlerDescriptor
-    ) {
+    return function (_: any, methodName: string, _desc: HandlerDescriptor) {
       const id = ManageId.generateId(ProvidersTypes.CONTROLLER);
 
       currentController = 'ClientControllerId';
-      console.log(
-        `Routes Binder running... 🚩🚩🚩🚩🚩 on handler :(${methodName}):. Generated Id is = ${id}. Construcor: `,
-        constructor
-      );
 
       /// Define Associated Method
       // Reflect.defineMetadata(
@@ -45,23 +37,23 @@ const routesBinder = function (httpMethod: HttpMethods) {
       // console.log({ constructor });
 
       Meta.define<string>({
+        id,
         key: SiteWideKeys.PATH,
         value: url,
-        targetConstructor: constructor,
         method: methodName,
       });
 
       Meta.define<string>({
+        id,
         key: SiteWideKeys.METHOD,
         value: httpMethod,
-        targetConstructor: constructor,
         method: methodName,
       });
 
       Meta.define<string>({
+        id,
         key: SiteWideKeys.PROVIDER,
         value: 'My Provider',
-        targetConstructor: Controller,
       });
     };
   };

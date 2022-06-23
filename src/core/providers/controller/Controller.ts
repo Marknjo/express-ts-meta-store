@@ -25,13 +25,13 @@ export const Controller = function () {
     for (let handler of handlers) {
       const httpMethod = Meta.getData<string>({
         key: SiteWideKeys.METHOD,
-        targetConstructor: constructor as any,
+        id: genetatedId,
         method: handler,
       });
 
       const path = Meta.getData<string>({
         key: SiteWideKeys.PATH,
-        targetConstructor: constructor as any,
+        id: genetatedId,
         method: handler,
       });
 

@@ -3,12 +3,12 @@ import { MetaStoreTypes } from '../types';
 
 export default class MetaModel {
   constructor(
+    public id: string,
     public key: SiteWideKeys,
-    public targetConstructor: GenericConstructor | any,
-    public constructorName?: string,
     public value?: string | number | {} | any[],
+    public targetConstructor?: GenericConstructor | any,
+    public constructorName?: string,
     public method?: string,
-    public type?: MetaStoreTypes,
-    public id?: string
+    public type?: MetaStoreTypes
   ) {}
 }
