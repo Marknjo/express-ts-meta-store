@@ -1,7 +1,7 @@
 import { AppUtils } from '../../library/helpers/Utils';
 import { ManageId } from '../../stores/idManager';
 
-import { Meta } from '../../stores/meta';
+import { Meta, MetaModel } from '../../stores/meta';
 import { GenericConstructor, ProvidersTypes, SiteWideKeys } from '../../types';
 
 export const Controller = function () {
@@ -9,11 +9,11 @@ export const Controller = function () {
     // Generate Id if not declared
     const genetatedId = ManageId.generateId(ProvidersTypes.CONTROLLER);
 
-    console.log(
-      `Controller :(${constructor.name}): running... 🚩🚩🚩🚩🚩 . Constructor: `,
-      constructor,
-      genetatedId
-    );
+    // console.log(
+    //   `Controller :(${constructor.name}): running... 🚩🚩🚩🚩🚩 . Constructor: `,
+    //   constructor,
+    //   genetatedId
+    // );
 
     const handlers = AppUtils.getControllerHandlers(constructor);
 
@@ -24,19 +24,22 @@ export const Controller = function () {
 
     for (let handler of handlers) {
       const httpMethod = Meta.getData<string>({
-        key: SiteWideKeys.METHOD,
         id: genetatedId,
+        type: ProvidersTypes.CONTROLLER,
+        key: SiteWideKeys.METHOD,
         method: handler,
       });
 
       const path = Meta.getData<string>({
-        key: SiteWideKeys.PATH,
         id: genetatedId,
+        type: ProvidersTypes.CONTROLLER,
+        key: SiteWideKeys.PATH,
         method: handler,
       });
 
-      if (path && handler) {
-        console.log(httpMethod, path);
+      if (path) {
+        console.log('Running 🚩🚩🚩🚩');
+        console.log({ httpMethod, path });
       }
     }
 

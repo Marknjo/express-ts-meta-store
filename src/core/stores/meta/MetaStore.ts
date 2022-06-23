@@ -1,4 +1,4 @@
-import MetaModel from './model/MetaModel';
+import { MetaModel } from './model/MetaModel';
 import { GenericConstructor } from '../../types';
 import { BaseStore, Listener } from '../../library/store';
 
@@ -32,8 +32,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const value = metaOptions.value as TVal;
     const targetConstructor = metaOptions.targetConstructor;
     const method = metaOptions.method ? { method: metaOptions.method } : {};
-    const type = metaOptions.type ? { type: metaOptions.type } : {};
-
+    const type = metaOptions.type;
     const id = metaOptions.id;
 
     return {
@@ -41,7 +40,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
       value,
       targetConstructor,
       ...method,
-      ...type,
+      type,
       id,
     };
   }
@@ -57,23 +56,23 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const metaData = new MetaModel(
       incomingMeta.id,
       incomingMeta.key,
+      incomingMeta.type,
       incomingMeta.value,
       incomingMeta.targetConstructor,
       incomingMeta.constructorName,
-      incomingMeta.method,
-      incomingMeta.type
+      incomingMeta.method
     );
 
     this.store.push({
       id: metaData.id,
       key: metaData.key,
-      value: metaData.value,
+      type: metaData.type,
+      ...(metaData.value ? { value: metaData.value } : {}),
       ...(constructorName ? { constructorName } : {}),
       ...(metaData.targetConstructor
         ? { targetConstructor: metaData.targetConstructor }
         : {}),
       ...(metaData.method ? { method: metaData.method } : {}),
-      ...(metaData.type ? { type: metaData.type } : {}),
     });
   }
 
@@ -95,14 +94,20 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     metaOptions: MetaModel
   ): boolean | TVal | MetaConstructorResults<TVal>[] {
     // const { id, key, method, type } =
-    const { id, key, method } = this.extractMetaOptions<TVal>(metaOptions);
+    const { id, key, method, type } =
+      this.extractMetaOptions<TVal>(metaOptions);
     const foundMethod = method ? method : false;
     // const foundType = type ? type : false;
 
     const filteredMetadata = this.store.filter(meta => {
       /// Get a method on a constructor
       if (foundMethod) {
-        if (meta.id === id && meta.key === key && meta.method === method) {
+        if (
+          meta.id === id &&
+          meta.key === key &&
+          meta.method === method &&
+          meta.type === type
+        ) {
           return meta;
         } else {
           return false;
@@ -110,31 +115,22 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
       }
 
       /// Get get a key on a constructor
-      if (meta.id === id && meta.key === key) {
+      if (meta.id === id && meta.key === key && meta.type === type) {
         return meta;
       } else {
         return false;
       }
     });
 
-    let foundMetadata: boolean | MetaConstructorResults<TVal>[] | TVal;
+    /// Get metadata values
+    let foundMetadata: boolean | MetaConstructorResults<TVal>[] | TVal = false;
 
-    /// get metadata stored in a method
-    if (foundMethod) {
-      if (filteredMetadata[0]) {
-        foundMetadata = filteredMetadata[0].value as TVal;
-      } else {
-        foundMetadata = false;
-      }
+    if (filteredMetadata.length === 1) {
+      foundMetadata = filteredMetadata[0].value as
+        | TVal
+        | MetaConstructorResults<TVal>[];
     }
 
-    if (filteredMetadata[0]) {
-      foundMetadata = filteredMetadata as MetaConstructorResults<TVal>[];
-    } else {
-      foundMetadata = false;
-    }
-
-    /// Return filtered data
     return foundMetadata;
   }
 }

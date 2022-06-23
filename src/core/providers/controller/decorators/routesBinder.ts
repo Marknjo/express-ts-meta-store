@@ -39,6 +39,7 @@ const routesBinder = function (httpMethod: HttpMethods) {
       Meta.define<string>({
         id,
         key: SiteWideKeys.PATH,
+        type: ProvidersTypes.CONTROLLER,
         value: url,
         method: methodName,
       });
@@ -46,6 +47,7 @@ const routesBinder = function (httpMethod: HttpMethods) {
       Meta.define<string>({
         id,
         key: SiteWideKeys.METHOD,
+        type: ProvidersTypes.CONTROLLER,
         value: httpMethod,
         method: methodName,
       });
@@ -53,6 +55,7 @@ const routesBinder = function (httpMethod: HttpMethods) {
       Meta.define<string>({
         id,
         key: SiteWideKeys.PROVIDER,
+        type: ProvidersTypes.CONTROLLER,
         value: 'My Provider',
       });
     };
