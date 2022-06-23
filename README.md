@@ -1,8 +1,8 @@
-# ES6 And Beyound Metadata
+# Turex Meta
 
 ## :balloon: Overview
 
-A library for express that uses ES6 and above to support Metadata.
+A Typescript Metadate library for express that uses ES6.
 
 ## :anger: Requirement
 
