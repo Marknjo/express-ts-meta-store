@@ -2,7 +2,8 @@ import { MetaModel } from './model/MetaModel';
 import { GenericConstructor } from '../../types';
 import { BaseStore, Listener } from '../../library/store';
 
-import { MetaConstructorResults } from './types';
+import { MetaConstructorResults, MetaDefineOptions } from './types';
+import { ManageId } from '../idManager';
 
 class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   private static initilizer: MetaStore;
@@ -79,11 +80,16 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   /**
    * Edit dispatch to define | defineMeta
    */
-  define<TVal>(metaOptions: MetaModel) {
-    const options = this.extractMetaOptions<TVal>(metaOptions);
+  define<TVal>(submittedOptions: MetaDefineOptions) {
+    const id = ManageId.generateId(submittedOptions.type);
+
+    const definedOption: MetaModel = { ...submittedOptions, id };
+
+    const options = this.extractMetaOptions<TVal>(definedOption);
 
     this.dispatch({
       ...options,
+      id,
     });
   }
 

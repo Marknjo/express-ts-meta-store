@@ -1,7 +1,6 @@
 /// Imports
 // import 'reflect-metadata';
 
-import { ManageId } from '../../../stores/idManager';
 import { Meta } from '../../../stores/meta';
 import {
   HandlerDescriptor,
@@ -17,8 +16,6 @@ export let currentController: string = '';
 const routesBinder = function (httpMethod: HttpMethods) {
   return function (url: string) {
     return function (_: any, methodName: string, _desc: HandlerDescriptor) {
-      const id = ManageId.generateId(ProvidersTypes.CONTROLLER);
-
       currentController = 'ClientControllerId';
 
       /// Define Associated Method
@@ -37,7 +34,6 @@ const routesBinder = function (httpMethod: HttpMethods) {
       // console.log({ constructor });
 
       Meta.define<string>({
-        id,
         key: SiteWideKeys.PATH,
         type: ProvidersTypes.CONTROLLER,
         value: url,
@@ -45,7 +41,6 @@ const routesBinder = function (httpMethod: HttpMethods) {
       });
 
       Meta.define<string>({
-        id,
         key: SiteWideKeys.METHOD,
         type: ProvidersTypes.CONTROLLER,
         value: httpMethod,
@@ -53,7 +48,6 @@ const routesBinder = function (httpMethod: HttpMethods) {
       });
 
       Meta.define<string>({
-        id,
         key: SiteWideKeys.PROVIDER,
         type: ProvidersTypes.CONTROLLER,
         value: 'My Provider',
