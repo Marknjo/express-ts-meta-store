@@ -5,7 +5,7 @@ import {
 } from '../../../types';
 
 export interface MetaDefineOptions {
-  key: SiteWideKeys;
+  metaKey: SiteWideKeys;
   type: ProvidersTypes;
   value?: string | number | {} | any[];
   targetConstructor?: GenericConstructor | any;

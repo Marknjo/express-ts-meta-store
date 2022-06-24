@@ -33,7 +33,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   }
 
   private extractMetaOptions<TVal>(metaOptions: MetaModel) {
-    const key = metaOptions.key;
+    const metaKey = metaOptions.metaKey;
     const constructorName = metaOptions.constructorName
       ? { constructorName: metaOptions.constructorName }
       : {};
@@ -43,20 +43,20 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const targetConstructor = metaOptions.targetConstructor
       ? { targetConstructor: metaOptions.targetConstructor }
       : {};
-    const method = metaOptions.propertyKey
-      ? { method: metaOptions.propertyKey }
+    const propertyKey = metaOptions.propertyKey
+      ? { propertyKey: metaOptions.propertyKey }
       : {};
     const type = metaOptions.type;
     const id = metaOptions.id;
 
     return {
       id,
-      key,
+      metaKey,
       type,
       ...value,
       ...targetConstructor,
       ...constructorName,
-      ...method,
+      ...propertyKey,
     };
   }
 
@@ -70,7 +70,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     /// Get new meta data
     const metaData = new MetaModel(
       incomingMeta.id,
-      incomingMeta.key,
+      incomingMeta.metaKey,
       incomingMeta.type,
       incomingMeta.value,
       incomingMeta.targetConstructor,
@@ -80,7 +80,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
     this.store.push({
       id: metaData.id,
-      key: metaData.key,
+      metaKey: metaData.metaKey,
       type: metaData.type,
       ...(metaData.value ? { value: metaData.value } : {}),
       ...(constructorName ? { constructorName } : {}),
@@ -113,23 +113,23 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   getData<TVal>(
     metaOptions: MetaModel
   ): boolean | TVal | MetaConstructorResults<TVal>[] {
-    // const { id, key, method, type } =
-    const { id, key, method, type } =
+    // const { id, metaKey, propertyKey, type } =
+    const { id, metaKey, propertyKey, type } =
       this.extractMetaOptions<TVal>(metaOptions);
-    const foundMethod = method ? method : false;
+    const foundMethod = propertyKey ? propertyKey : false;
 
     // const foundType = type ? type : false;
     const filteredMetadata = this.store.filter(meta => {
       /// Arrange search creteria
       const idSearchCreteria = meta.id === id;
-      const keyAndTypeCreteria = meta.key === key && meta.type === type;
+      const keyAndTypeCreteria = meta.metaKey === metaKey && meta.type === type;
 
-      /// Get a method on a constructor
+      /// Get a propertyKey on a constructor
       if (foundMethod) {
         if (
           idSearchCreteria &&
           keyAndTypeCreteria &&
-          meta.propertyKey === method
+          meta.propertyKey === propertyKey
         ) {
           return meta;
         } else {
@@ -137,7 +137,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
         }
       }
 
-      /// Get get a key on a constructor
+      /// Get get a metaKey on a constructor
       if (idSearchCreteria && keyAndTypeCreteria) {
         return meta;
       } else {
@@ -163,17 +163,17 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    * Returns undefined if not found
    *
    * @param id This is the unique id for the current target constructor
-   * @param key This is the SiteKey associated with the method
+   * @param metaKey This is the SiteKey associated with the propertyKey
    * @param type This is the type of the current process
    * @returns a target constructor and it's name
    */
   getTargetConstructor(
     id: string,
     type: ProvidersTypes,
-    key: SiteWideKeys
+    metaKey: SiteWideKeys
   ): GetTargetConstructorOptions {
     const foundConstructor = this.store.find(
-      meta => meta.id === id && meta.type === type && meta.key === key
+      meta => meta.id === id && meta.type === type && meta.metaKey === metaKey
     );
 
     const searchResults = foundConstructor

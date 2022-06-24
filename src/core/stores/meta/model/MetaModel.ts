@@ -7,7 +7,7 @@ import {
 export class MetaModel {
   constructor(
     public id: string,
-    public key: SiteWideKeys,
+    public metaKey: SiteWideKeys,
     public type: ProvidersTypes,
     public value?: string | number | {} | any[],
     public targetConstructor?: GenericConstructor | Function | any,

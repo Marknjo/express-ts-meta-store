@@ -8,7 +8,7 @@ export const Controller = function () {
   return function (constructor: GenericConstructor) {
     /// Update constructor meta (TargetConstructor and constructorName)
     Meta.define<string>({
-      key: SiteWideKeys.BASE_CONSTRUCTOR,
+      metaKey: SiteWideKeys.BASE_CONSTRUCTOR,
       type: ProvidersTypes.CONTROLLER,
       targetConstructor: constructor,
       constructorName: constructor.prototype,
@@ -34,14 +34,14 @@ export const Controller = function () {
       const httpMethod = Meta.getData<string>({
         id: targetId,
         type: ProvidersTypes.CONTROLLER,
-        key: SiteWideKeys.METHOD,
+        metaKey: SiteWideKeys.METHOD,
         propertyKey: handler,
       });
 
       const path = Meta.getData<string>({
         id: targetId,
         type: ProvidersTypes.CONTROLLER,
-        key: SiteWideKeys.PATH,
+        metaKey: SiteWideKeys.PATH,
         propertyKey: handler,
       });
 
