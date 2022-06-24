@@ -11,7 +11,7 @@ export const Controller = function () {
       metaKey: AppMetaKeys.BASE_CONSTRUCTOR,
       type: ProvidersTypes.CONTROLLER,
       targetConstructor: constructor,
-      constructorName: constructor.prototype,
+      constructorName: constructor.name,
     });
 
     // Generate Id if not declared
@@ -22,6 +22,13 @@ export const Controller = function () {
     //   constructor,
     //   genetatedId
     // );
+
+    const foundProperties = Meta.getPropertiesWithDecorators(
+      targetId,
+      ProvidersTypes.CONTROLLER
+    );
+
+    console.log('Found properties: ', foundProperties);
 
     const handlers = AppUtils.getControllerHandlers(constructor);
 

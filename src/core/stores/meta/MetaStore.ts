@@ -188,7 +188,45 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     return searchResults;
   }
 
-  getProperties() {}
+  /**
+   * Gets all properties in a target constructor with a decorator
+   * @param id This is the unique id for the current target constructor
+   * @param type Unique identifier of every provider type.
+   * @returns Returns a filtered collection of all properties with the decorators
+   */
+  getPropertiesWithDecorators(id: string, type: ProvidersTypes) {
+    const filteredProperties: MetaModel[] | [] = this.store.filter(
+      meta => meta.propertyKey && meta.id === id && meta.type === type
+    );
+
+    if (filteredProperties && filteredProperties.length > 0) {
+      /// Map only properties
+      const mappedProperties = filteredProperties.map(
+        meta => meta.propertyKey
+      ) as string[];
+
+      /// Filter dublicates
+      const filteredPropertiesWithoutDublicates = mappedProperties.reduce(
+        (prevProp, currProp, indx) => {
+          let prevPropIndx = prevProp.length - 1;
+
+          if (prevProp[prevPropIndx] !== currProp) {
+            prevProp =
+              prevProp[indx] === '' ? [currProp] : [...prevProp, currProp];
+          }
+
+          return prevProp;
+        },
+        ['']
+      );
+
+      return filteredPropertiesWithoutDublicates;
+    }
+
+    const results = filteredProperties.length > 0 ? filteredProperties : false;
+
+    return results;
+  }
 
   //// PRIVATE HELPERS METHODS
 }
