@@ -1,16 +1,17 @@
 /// Imports
-import 'reflect-metadata';
+import { Meta } from '../../../stores/meta';
+import { ProvidersTypes } from '../../../types';
 import { ParamsDecoratorsKeys, ParamsDecoratorsActions } from '../types';
 
 /// Define middleware decorator
 export const parametersBinder = function (feature: any, featureCheck: string) {
-  return function (constructor: any, handler: string, position: number) {
-    Reflect.defineMetadata(
-      feature,
-      { position, [featureCheck]: true },
-      constructor,
-      handler
-    );
+  return function (_: any, handler: string, position: number) {
+    Meta.define<{ [key: string]: boolean | number }>({
+      metaKey: feature,
+      value: { position, [featureCheck]: true },
+      type: ProvidersTypes.CONTROLLER,
+      propertyKey: handler,
+    });
   };
 };
 
