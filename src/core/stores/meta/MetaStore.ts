@@ -194,11 +194,56 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    * @param type Unique identifier of every provider type.
    * @returns Returns a filtered collection of all properties with the decorators
    */
-  getPropertiesWithDecorators(id: string, type: ProvidersTypes) {
+  getPropertiesKeys(id: string, type: ProvidersTypes) {
+    const results = this.getPropertiesMetaFactory<string[]>(id, type);
+
+    return results;
+  }
+
+  //// PRIVATE HELPERS METHODS
+
+  /**
+   * A factory method that preps results of
+   * target constructor properties keys with their values or not
+   *
+   * @param id This is the unique id for the current target constructor
+   * @param type Unique identifier of every provider type.
+   * @param type Unique identifier of every provider type.
+   * @returns Returns a filtered collection of all properties with the decorators
+   */
+  private getPropertiesMetaFactory<TVal>(
+    id: string,
+    type: ProvidersTypes,
+    withValues: boolean = false
+  ) {
     const filteredProperties: MetaModel[] | [] = this.store.filter(
       meta => meta.propertyKey && meta.id === id && meta.type === type
     );
 
+    let returnResults: [{ propertyKey: string; value: TVal }] | string[] = [];
+
+    if (withValues) {
+    }
+
+    /// Get a collection properties keys
+    if (!withValues) {
+      returnResults = this.getPropertiesKeysWithoutDublicates(
+        filteredProperties
+      ) as string[] | [];
+    }
+
+    const results = returnResults.length > 0 ? returnResults : false;
+
+    return results;
+  }
+
+  /**
+   * Helper methods that abstracts process of filtering and mapping filtered properties to remove dublicates
+   *
+   * @param filteredProperties A collection of MetaModel
+   * @returns a collection of properties names in a give target constructor
+   */
+  getPropertiesKeysWithoutDublicates(filteredProperties: MetaModel[]) {
     if (filteredProperties && filteredProperties.length > 0) {
       /// Map only properties
       const mappedProperties = filteredProperties.map(
@@ -222,13 +267,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
       return filteredPropertiesWithoutDublicates;
     }
-
-    const results = filteredProperties.length > 0 ? filteredProperties : false;
-
-    return results;
   }
-
-  //// PRIVATE HELPERS METHODS
 }
 
 const Meta = MetaStore.init;
