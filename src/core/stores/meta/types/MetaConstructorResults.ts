@@ -2,7 +2,7 @@ import { GenericConstructor } from '../../../types/';
 
 export interface MetaConstructorResults<TVal> {
   id: string;
-  key: string;
-  value: TVal;
+  metaKey: string;
+  metaValue: TVal;
   targetConstructor: GenericConstructor;
 }

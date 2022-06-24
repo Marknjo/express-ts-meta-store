@@ -9,7 +9,7 @@ export const Controller = function () {
     /// Update constructor meta (TargetConstructor and constructorName)
     Meta.define<string>({
       metaKey: AppMetaKeys.BASE_CONSTRUCTOR,
-      type: ProvidersTypes.CONTROLLER,
+      metaType: ProvidersTypes.CONTROLLER,
       targetConstructor: constructor,
       constructorName: constructor.name,
     });
@@ -35,14 +35,14 @@ export const Controller = function () {
     for (let handler of handlers) {
       const httpMethod = Meta.getData<string>({
         id: targetId,
-        type: ProvidersTypes.CONTROLLER,
+        metaType: ProvidersTypes.CONTROLLER,
         metaKey: AppMetaKeys.METHOD,
         propertyKey: handler,
       });
 
       const path = Meta.getData<string>({
         id: targetId,
-        type: ProvidersTypes.CONTROLLER,
+        metaType: ProvidersTypes.CONTROLLER,
         metaKey: AppMetaKeys.PATH,
         propertyKey: handler,
       });

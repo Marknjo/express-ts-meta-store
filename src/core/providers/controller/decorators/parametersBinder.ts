@@ -8,8 +8,8 @@ export const parametersBinder = function (feature: any, featureCheck: string) {
   return function (_: any, handler: string, position: number) {
     Meta.define<{ [key: string]: boolean | number }>({
       metaKey: feature,
-      value: { position, [featureCheck]: true },
-      type: ProvidersTypes.CONTROLLER,
+      metaValue: { position, [featureCheck]: true },
+      metaType: ProvidersTypes.CONTROLLER,
       propertyKey: handler,
     });
   };

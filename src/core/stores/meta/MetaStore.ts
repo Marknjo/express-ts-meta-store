@@ -37,8 +37,8 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const constructorName = metaOptions.constructorName
       ? { constructorName: metaOptions.constructorName }
       : {};
-    const value: { value: TVal } | {} = metaOptions.value
-      ? { value: metaOptions.value }
+    const metaValue: { metaValue: TVal } | {} = metaOptions.metaValue
+      ? { metaValue: metaOptions.metaValue }
       : {};
     const targetConstructor = metaOptions.targetConstructor
       ? { targetConstructor: metaOptions.targetConstructor }
@@ -46,14 +46,14 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const propertyKey = metaOptions.propertyKey
       ? { propertyKey: metaOptions.propertyKey }
       : {};
-    const type = metaOptions.type;
+    const metaType = metaOptions.metaType;
     const id = metaOptions.id;
 
     return {
       id,
       metaKey,
-      type,
-      ...value,
+      metaType,
+      ...metaValue,
       ...targetConstructor,
       ...constructorName,
       ...propertyKey,
@@ -71,8 +71,8 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const metaData = new MetaModel(
       incomingMeta.id,
       incomingMeta.metaKey,
-      incomingMeta.type,
-      incomingMeta.value,
+      incomingMeta.metaType,
+      incomingMeta.metaValue,
       incomingMeta.targetConstructor,
       incomingMeta.constructorName,
       incomingMeta.propertyKey
@@ -81,8 +81,8 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     this.store.push({
       id: metaData.id,
       metaKey: metaData.metaKey,
-      type: metaData.type,
-      ...(metaData.value ? { value: metaData.value } : {}),
+      metaType: metaData.metaType,
+      ...(metaData.metaValue ? { metaValue: metaData.metaValue } : {}),
       ...(constructorName ? { constructorName } : {}),
       ...(metaData.targetConstructor
         ? { targetConstructor: metaData.targetConstructor }
@@ -95,7 +95,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    * Edit dispatch to define | defineMeta
    */
   define<TVal>(submittedOptions: MetaDefineOptions) {
-    const id = ManageId.generateId(submittedOptions.type);
+    const id = ManageId.generateId(submittedOptions.metaType);
 
     const definedOption: MetaModel = { ...submittedOptions, id };
 
@@ -113,16 +113,17 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   getData<TVal>(
     metaOptions: MetaModel
   ): boolean | TVal | MetaConstructorResults<TVal>[] {
-    // const { id, metaKey, propertyKey, type } =
-    const { id, metaKey, propertyKey, type } =
+    // const { id, metaKey, propertyKey, metaType } =
+    const { id, metaKey, propertyKey, metaType } =
       this.extractMetaOptions<TVal>(metaOptions);
     const foundMethod = propertyKey ? propertyKey : false;
 
-    // const foundType = type ? type : false;
+    // const foundType = metaType ? metaType : false;
     const filteredMetadata = this.store.filter(meta => {
       /// Arrange search creteria
       const idSearchCreteria = meta.id === id;
-      const keyAndTypeCreteria = meta.metaKey === metaKey && meta.type === type;
+      const keyAndTypeCreteria =
+        meta.metaKey === metaKey && meta.metaType === metaType;
 
       /// Get a propertyKey on a constructor
       if (foundMethod) {
@@ -149,7 +150,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     let foundMetadata: boolean | MetaConstructorResults<TVal>[] | TVal = false;
 
     if (filteredMetadata.length === 1) {
-      foundMetadata = filteredMetadata[0].value as
+      foundMetadata = filteredMetadata[0].metaValue as
         | TVal
         | MetaConstructorResults<TVal>[];
     }
@@ -164,16 +165,17 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    *
    * @param id This is the unique id for the current target constructor
    * @param metaKey This is the SiteKey associated with the propertyKey
-   * @param type This is the type of the current process
+   * @param metaType This is the metaType of the current process
    * @returns a target constructor and it's name
    */
   getTargetConstructor(
     id: string,
-    type: ProvidersTypes,
+    metaType: ProvidersTypes,
     metaKey: AppMetaKeys
   ): GetTargetConstructorOptions {
     const foundConstructor = this.store.find(
-      meta => meta.id === id && meta.type === type && meta.metaKey === metaKey
+      meta =>
+        meta.id === id && meta.metaType === metaType && meta.metaKey === metaKey
     );
 
     const searchResults = foundConstructor
@@ -191,11 +193,11 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   /**
    * Gets all properties in a target constructor with a decorator
    * @param id This is the unique id for the current target constructor
-   * @param type Unique identifier of every provider type.
+   * @param metaType Unique identifier of every provider metaType.
    * @returns Returns a filtered collection of all properties with the decorators
    */
-  getPropertiesKeys(id: string, type: ProvidersTypes) {
-    const results = this.getPropertiesMetaFactory(id, type);
+  getPropertiesKeys(id: string, metaType: ProvidersTypes) {
+    const results = this.getPropertiesMetaFactory(id, metaType);
 
     return results;
   }
@@ -203,11 +205,11 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   /**
    * Gets all target constructor properties with their values
    * @param id This is the unique id for the current target constructor
-   * @param type Unique identifier of every provider type.
+   * @param metaType Unique identifier of every provider metaType.
    * @returns Returns a filtered collection of all properties with the decorators
    */
-  getPropertiesKeysMeta(id: string, type: ProvidersTypes) {
-    const results = this.getPropertiesMetaFactory(id, type, true);
+  getPropertiesKeysMeta(id: string, metaType: ProvidersTypes) {
+    const results = this.getPropertiesMetaFactory(id, metaType, true);
 
     return results;
   }
@@ -219,22 +221,23 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    * target constructor properties keys with their values or not
    *
    * @param id This is the unique id for the current target constructor
-   * @param type Unique identifier of every provider type.
-   * @param type Unique identifier of every provider type.
+   * @param metaType Unique identifier of every provider metaType.
+   * @param metaType Unique identifier of every provider metaType.
    * @returns Returns a filtered collection of all properties with the decorators
    */
   private getPropertiesMetaFactory(
     id: string,
-    type: ProvidersTypes,
+    metaType: ProvidersTypes,
     withValues: boolean = false
   ) {
-    const filteredProperties = this.filterPropertiesByIdAndType(id, type);
+    const filteredProperties = this.filterPropertiesByIdAndType(id, metaType);
 
-    let returnResults: [{ propertyKey: string; value: any }] | string[] = [];
+    let returnResults: [{ propertyKey: string; metaValue: any }] | string[] =
+      [];
 
     if (withValues) {
       returnResults = this.getPropertiesKeysValues(filteredProperties) as
-        | [{ propertyKey: string; value: any }]
+        | [{ propertyKey: string; metaValue: any }]
         | [];
     }
 
@@ -259,20 +262,20 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   private getPropertiesKeysValues(filteredProperties: MetaModel[]) {
     return filteredProperties.map(meta => ({
       propertyKey: meta.propertyKey,
-      value: meta.value,
+      metaValue: meta.metaValue,
       metaKey: meta.metaKey,
     }));
   }
 
   /**
-   * A helper method that filters properties by their id and type
+   * A helper method that filters properties by their id and metaType
    * @param id This is the unique id for the current target constructor
-   * @param type Unique identifier of every provider type.
+   * @param metaType Unique identifier of every provider metaType.
    * @returns Returns a filtered collection of all properties with the decorators
    */
-  private filterPropertiesByIdAndType(id: string, type: ProvidersTypes) {
+  private filterPropertiesByIdAndType(id: string, metaType: ProvidersTypes) {
     const filteredProperties: MetaModel[] | [] = this.store.filter(
-      meta => meta.propertyKey && meta.id === id && meta.type === type
+      meta => meta.propertyKey && meta.id === id && meta.metaType === metaType
     );
 
     return filteredProperties;

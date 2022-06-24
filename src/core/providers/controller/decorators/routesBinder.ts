@@ -24,15 +24,15 @@ const routesBinder = function (httpMethod: HttpMethods) {
 
       Meta.define<string>({
         metaKey: AppMetaKeys.PATH,
-        type: ProvidersTypes.CONTROLLER,
-        value: url,
+        metaType: ProvidersTypes.CONTROLLER,
+        metaValue: url,
         propertyKey: methodName,
       });
 
       Meta.define<string>({
         metaKey: AppMetaKeys.METHOD,
-        type: ProvidersTypes.CONTROLLER,
-        value: httpMethod,
+        metaType: ProvidersTypes.CONTROLLER,
+        metaValue: httpMethod,
         propertyKey: methodName,
       });
     };
