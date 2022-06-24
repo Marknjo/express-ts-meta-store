@@ -10,6 +10,8 @@ class IdManagerStore extends BaseStore<
 > {
   private static initilizer: IdManagerStore;
 
+  private targetId: string | boolean = false;
+
   /**
    * Store initilizer
    */
@@ -68,7 +70,18 @@ class IdManagerStore extends BaseStore<
    * @returns Current base Controller Id
    */
   findId(providerType: ProvidersTypes) {
-    const foundId = this.findIdDetails(providerType);
+    /// Don't search id if it is available - find it from targetId cache
+    if (this.targetId) {
+      return this.targetId;
+    }
+
+    let foundId: boolean | IdManagerModel | string = false;
+
+    if (!this.targetId) {
+      foundId = this.findIdDetails(providerType);
+
+      this.targetId = foundId ? (foundId as IdManagerModel).id : false;
+    }
 
     if (foundId) {
       const results = foundId as IdManagerModel;
@@ -116,6 +129,8 @@ class IdManagerStore extends BaseStore<
    * @param configs Each handler config
    */
   protected updateStore(configs: IdManagerModel): void {
+    if (this.targetId) this.targetId = false;
+
     /// Get new meta data
     const currId = new IdManagerModel(
       configs.id,

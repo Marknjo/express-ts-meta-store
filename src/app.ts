@@ -4,8 +4,10 @@ import { join } from 'path';
 import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import { ClientRouter } from './routes/ClientRoutes';
+import { AdminController } from './controllers/AdminController';
 
 new ClientRouter();
+new AdminController();
 
 const app = express();
 
