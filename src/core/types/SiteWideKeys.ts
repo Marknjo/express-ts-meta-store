@@ -11,5 +11,5 @@ export enum SiteWideKeys {
   ROUTER_MERGE_PARAMS = 'routerMergeParams',
   ROUTER_MERGE_PARAMS_WITH = 'routerMergeParamsWith',
   CONTROLLER_ID = 'controllerId',
-  CONTROLLER = 'controllerId',
+  BASE_CONSTRUCTOR = 'base_constructor',
 }

@@ -10,7 +10,7 @@ export class MetaModel {
     public key: SiteWideKeys,
     public type: ProvidersTypes,
     public value?: string | number | {} | any[],
-    public targetConstructor?: GenericConstructor | any,
+    public targetConstructor?: GenericConstructor | Function | any,
     public constructorName?: string,
     public method?: string
   ) {}

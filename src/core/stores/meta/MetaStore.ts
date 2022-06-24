@@ -1,5 +1,5 @@
 import { MetaModel } from './model/MetaModel';
-import { GenericConstructor } from '../../types';
+import { GenericConstructor, ProvidersTypes, SiteWideKeys } from '../../types';
 import { BaseStore, Listener } from '../../library/store';
 
 import { MetaConstructorResults, MetaDefineOptions } from './types';
@@ -30,19 +30,27 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
   private extractMetaOptions<TVal>(metaOptions: MetaModel) {
     const key = metaOptions.key;
-    const value = metaOptions.value as TVal;
-    const targetConstructor = metaOptions.targetConstructor;
+    const constructorName = metaOptions.constructorName
+      ? { constructorName: metaOptions.constructorName }
+      : {};
+    const value: { value: TVal } | {} = metaOptions.value
+      ? { value: metaOptions.value }
+      : {};
+    const targetConstructor = metaOptions.targetConstructor
+      ? { targetConstructor: metaOptions.targetConstructor }
+      : {};
     const method = metaOptions.method ? { method: metaOptions.method } : {};
     const type = metaOptions.type;
     const id = metaOptions.id;
 
     return {
-      key,
-      value,
-      targetConstructor,
-      ...method,
-      type,
       id,
+      key,
+      type,
+      ...value,
+      ...targetConstructor,
+      ...constructorName,
+      ...method,
     };
   }
 
@@ -103,17 +111,16 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const { id, key, method, type } =
       this.extractMetaOptions<TVal>(metaOptions);
     const foundMethod = method ? method : false;
-    // const foundType = type ? type : false;
 
+    // const foundType = type ? type : false;
     const filteredMetadata = this.store.filter(meta => {
+      /// Arrange search creteria
+      const idSearchCreteria = meta.id === id;
+      const keyAndTypeCreteria = meta.key === key && meta.type === type;
+
       /// Get a method on a constructor
       if (foundMethod) {
-        if (
-          meta.id === id &&
-          meta.key === key &&
-          meta.method === method &&
-          meta.type === type
-        ) {
+        if (idSearchCreteria && keyAndTypeCreteria && meta.method === method) {
           return meta;
         } else {
           return false;
@@ -121,7 +128,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
       }
 
       /// Get get a key on a constructor
-      if (meta.id === id && meta.key === key && meta.type === type) {
+      if (idSearchCreteria && keyAndTypeCreteria) {
         return meta;
       } else {
         return false;
@@ -139,6 +146,8 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
     return foundMetadata;
   }
+
+  //// PRIVATE HELPERS METHODS
 }
 
 const Meta = MetaStore.init;
