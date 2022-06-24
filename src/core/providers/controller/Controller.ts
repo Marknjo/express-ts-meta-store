@@ -6,8 +6,16 @@ import { GenericConstructor, ProvidersTypes, SiteWideKeys } from '../../types';
 
 export const Controller = function () {
   return function (constructor: GenericConstructor) {
+    /// Update constructor meta (TargetConstructor and constructorName)
+    Meta.define<string>({
+      key: SiteWideKeys.BASE_CONSTRUCTOR,
+      type: ProvidersTypes.CONTROLLER,
+      targetConstructor: constructor,
+      constructorName: constructor.prototype,
+    });
+
     // Generate Id if not declared
-    const genetatedId = ManageId.generateId(ProvidersTypes.CONTROLLER);
+    const targetId = ManageId.findId(ProvidersTypes.CONTROLLER) as string;
 
     // console.log(
     //   `Controller :(${constructor.name}): running... 🚩🚩🚩🚩🚩 . Constructor: `,
@@ -24,14 +32,14 @@ export const Controller = function () {
 
     for (let handler of handlers) {
       const httpMethod = Meta.getData<string>({
-        id: genetatedId,
+        id: targetId,
         type: ProvidersTypes.CONTROLLER,
         key: SiteWideKeys.METHOD,
         method: handler,
       });
 
       const path = Meta.getData<string>({
-        id: genetatedId,
+        id: targetId,
         type: ProvidersTypes.CONTROLLER,
         key: SiteWideKeys.PATH,
         method: handler,

@@ -150,11 +150,15 @@ class IdManagerStore extends BaseStore<
     regenerateId?: boolean,
     regerateOptions?: { type: ProvidersTypes; prevId: string; name: string }
   ) {
-    const generatedId = randomUUID();
+    /// Check if there's current provider id in the store
+    const targetId = this.findId(providerType);
 
-    if (this.findId(providerType) && !regenerateId) {
-      return this.findId(providerType) as string;
+    if (targetId && !regenerateId) {
+      return targetId as string;
     }
+
+    /// Generate id if there is no id and dispatch
+    const generatedId = randomUUID();
 
     this.dispatch({
       id: generatedId,
