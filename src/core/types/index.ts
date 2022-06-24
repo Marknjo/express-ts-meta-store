@@ -4,7 +4,7 @@ export * from './GenericConstructor';
 export * from './HandlerDescriptor';
 
 /// Enums
-export * from './SiteWideKeys';
+export * from './AppMetaKeys';
 
 /// Generals
 export * from './ProvidersTypes';

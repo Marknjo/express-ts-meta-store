@@ -2,11 +2,7 @@
 // import 'reflect-metadata';
 
 import { Meta } from '../../../stores/meta';
-import {
-  HandlerDescriptor,
-  ProvidersTypes,
-  SiteWideKeys,
-} from '../../../types';
+import { HandlerDescriptor, ProvidersTypes, AppMetaKeys } from '../../../types';
 // import { Controller } from '../Controller';
 import { HttpMethods } from '../types';
 
@@ -34,21 +30,21 @@ const routesBinder = function (httpMethod: HttpMethods) {
       // console.log({ constructor });
 
       Meta.define<string>({
-        metaKey: SiteWideKeys.PATH,
+        metaKey: AppMetaKeys.PATH,
         type: ProvidersTypes.CONTROLLER,
         value: url,
         propertyKey: methodName,
       });
 
       Meta.define<string>({
-        metaKey: SiteWideKeys.METHOD,
+        metaKey: AppMetaKeys.METHOD,
         type: ProvidersTypes.CONTROLLER,
         value: httpMethod,
         propertyKey: methodName,
       });
 
       Meta.define<string>({
-        metaKey: SiteWideKeys.PROVIDER,
+        metaKey: AppMetaKeys.PROVIDER,
         type: ProvidersTypes.CONTROLLER,
         value: 'My Provider',
       });

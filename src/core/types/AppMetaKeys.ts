@@ -1,4 +1,4 @@
-export enum SiteWideKeys {
+export enum AppMetaKeys {
   REQ_RES_FEATURE = 'feature',
   BODY_VALIDATOR = 'bodyValidator',
   PATH = 'path',

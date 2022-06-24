@@ -1,5 +1,5 @@
 import { MetaModel } from './model/MetaModel';
-import { GenericConstructor, ProvidersTypes, SiteWideKeys } from '../../types';
+import { GenericConstructor, ProvidersTypes, AppMetaKeys } from '../../types';
 import { BaseStore, Listener } from '../../library/store';
 
 import {
@@ -170,7 +170,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   getTargetConstructor(
     id: string,
     type: ProvidersTypes,
-    metaKey: SiteWideKeys
+    metaKey: AppMetaKeys
   ): GetTargetConstructorOptions {
     const foundConstructor = this.store.find(
       meta => meta.id === id && meta.type === type && meta.metaKey === metaKey

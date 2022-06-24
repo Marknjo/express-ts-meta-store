@@ -1,11 +1,11 @@
 import {
   GenericConstructor,
   ProvidersTypes,
-  SiteWideKeys,
+  AppMetaKeys,
 } from '../../../types';
 
 export interface MetaDefineOptions {
-  metaKey: SiteWideKeys;
+  metaKey: AppMetaKeys;
   type: ProvidersTypes;
   value?: string | number | {} | any[];
   targetConstructor?: GenericConstructor | any;

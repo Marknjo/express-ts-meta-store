@@ -2,13 +2,13 @@ import { AppUtils } from '../../library/helpers/Utils';
 import { ManageId } from '../../stores/idManager';
 
 import { Meta, MetaModel } from '../../stores/meta';
-import { GenericConstructor, ProvidersTypes, SiteWideKeys } from '../../types';
+import { GenericConstructor, ProvidersTypes, AppMetaKeys } from '../../types';
 
 export const Controller = function () {
   return function (constructor: GenericConstructor) {
     /// Update constructor meta (TargetConstructor and constructorName)
     Meta.define<string>({
-      metaKey: SiteWideKeys.BASE_CONSTRUCTOR,
+      metaKey: AppMetaKeys.BASE_CONSTRUCTOR,
       type: ProvidersTypes.CONTROLLER,
       targetConstructor: constructor,
       constructorName: constructor.prototype,
@@ -34,14 +34,14 @@ export const Controller = function () {
       const httpMethod = Meta.getData<string>({
         id: targetId,
         type: ProvidersTypes.CONTROLLER,
-        metaKey: SiteWideKeys.METHOD,
+        metaKey: AppMetaKeys.METHOD,
         propertyKey: handler,
       });
 
       const path = Meta.getData<string>({
         id: targetId,
         type: ProvidersTypes.CONTROLLER,
-        metaKey: SiteWideKeys.PATH,
+        metaKey: AppMetaKeys.PATH,
         propertyKey: handler,
       });
 
