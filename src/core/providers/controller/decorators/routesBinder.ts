@@ -37,14 +37,14 @@ const routesBinder = function (httpMethod: HttpMethods) {
         key: SiteWideKeys.PATH,
         type: ProvidersTypes.CONTROLLER,
         value: url,
-        method: methodName,
+        propertyKey: methodName,
       });
 
       Meta.define<string>({
         key: SiteWideKeys.METHOD,
         type: ProvidersTypes.CONTROLLER,
         value: httpMethod,
-        method: methodName,
+        propertyKey: methodName,
       });
 
       Meta.define<string>({

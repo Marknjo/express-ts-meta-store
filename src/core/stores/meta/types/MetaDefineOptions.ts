@@ -10,5 +10,5 @@ export interface MetaDefineOptions {
   value?: string | number | {} | any[];
   targetConstructor?: GenericConstructor | any;
   constructorName?: string;
-  method?: string;
+  propertyKey?: string;
 }

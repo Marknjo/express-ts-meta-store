@@ -12,6 +12,6 @@ export class MetaModel {
     public value?: string | number | {} | any[],
     public targetConstructor?: GenericConstructor | Function | any,
     public constructorName?: string,
-    public method?: string
+    public propertyKey?: string
   ) {}
 }

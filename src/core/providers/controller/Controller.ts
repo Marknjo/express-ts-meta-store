@@ -35,14 +35,14 @@ export const Controller = function () {
         id: targetId,
         type: ProvidersTypes.CONTROLLER,
         key: SiteWideKeys.METHOD,
-        method: handler,
+        propertyKey: handler,
       });
 
       const path = Meta.getData<string>({
         id: targetId,
         type: ProvidersTypes.CONTROLLER,
         key: SiteWideKeys.PATH,
-        method: handler,
+        propertyKey: handler,
       });
 
       if (path) {

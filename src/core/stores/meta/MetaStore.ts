@@ -43,7 +43,9 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
     const targetConstructor = metaOptions.targetConstructor
       ? { targetConstructor: metaOptions.targetConstructor }
       : {};
-    const method = metaOptions.method ? { method: metaOptions.method } : {};
+    const method = metaOptions.propertyKey
+      ? { method: metaOptions.propertyKey }
+      : {};
     const type = metaOptions.type;
     const id = metaOptions.id;
 
@@ -73,7 +75,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
       incomingMeta.value,
       incomingMeta.targetConstructor,
       incomingMeta.constructorName,
-      incomingMeta.method
+      incomingMeta.propertyKey
     );
 
     this.store.push({
@@ -85,7 +87,7 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
       ...(metaData.targetConstructor
         ? { targetConstructor: metaData.targetConstructor }
         : {}),
-      ...(metaData.method ? { method: metaData.method } : {}),
+      ...(metaData.propertyKey ? { propertyKey: metaData.propertyKey } : {}),
     });
   }
 
@@ -124,7 +126,11 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
       /// Get a method on a constructor
       if (foundMethod) {
-        if (idSearchCreteria && keyAndTypeCreteria && meta.method === method) {
+        if (
+          idSearchCreteria &&
+          keyAndTypeCreteria &&
+          meta.propertyKey === method
+        ) {
           return meta;
         } else {
           return false;
@@ -181,6 +187,8 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
 
     return searchResults;
   }
+
+  getProperties() {}
 
   //// PRIVATE HELPERS METHODS
 }
