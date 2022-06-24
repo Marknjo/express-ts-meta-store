@@ -21,13 +21,6 @@ const routesBinder = function (httpMethod: HttpMethods) {
       //   constructor,
       //   methodName
       // );
-      // const pro = Object.getPrototypeOf(constructor);
-
-      // console.log({ pro: constructor.prototype });
-
-      /// Define Associated route path
-      // Reflect.defineMetadata(SiteWideKeys.PATH, url, constructor, methodName);
-      // console.log({ constructor });
 
       Meta.define<string>({
         metaKey: AppMetaKeys.PATH,
@@ -41,12 +34,6 @@ const routesBinder = function (httpMethod: HttpMethods) {
         type: ProvidersTypes.CONTROLLER,
         value: httpMethod,
         propertyKey: methodName,
-      });
-
-      Meta.define<string>({
-        metaKey: AppMetaKeys.PROVIDER,
-        type: ProvidersTypes.CONTROLLER,
-        value: 'My Provider',
       });
     };
   };

@@ -1,7 +1,7 @@
 import { AppUtils } from '../../library/helpers/Utils';
 import { ManageId } from '../../stores/idManager';
 
-import { Meta, MetaModel } from '../../stores/meta';
+import { Meta } from '../../stores/meta';
 import { GenericConstructor, ProvidersTypes, AppMetaKeys } from '../../types';
 
 export const Controller = function () {
@@ -24,11 +24,6 @@ export const Controller = function () {
     // );
 
     const handlers = AppUtils.getControllerHandlers(constructor);
-
-    // const provider = Meta.getData<string>({
-    //   key: SiteWideKeys.PROVIDER,
-    //   targetConstructor: Controller,
-    // });
 
     for (let handler of handlers) {
       const httpMethod = Meta.getData<string>({
