@@ -195,7 +195,19 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    * @returns Returns a filtered collection of all properties with the decorators
    */
   getPropertiesKeys(id: string, type: ProvidersTypes) {
-    const results = this.getPropertiesMetaFactory<string[]>(id, type);
+    const results = this.getPropertiesMetaFactory(id, type);
+
+    return results;
+  }
+
+  /**
+   * Gets all target constructor properties with their values
+   * @param id This is the unique id for the current target constructor
+   * @param type Unique identifier of every provider type.
+   * @returns Returns a filtered collection of all properties with the decorators
+   */
+  getPropertiesKeysMeta(id: string, type: ProvidersTypes) {
+    const results = this.getPropertiesMetaFactory(id, type, true);
 
     return results;
   }
@@ -211,18 +223,19 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
    * @param type Unique identifier of every provider type.
    * @returns Returns a filtered collection of all properties with the decorators
    */
-  private getPropertiesMetaFactory<TVal>(
+  private getPropertiesMetaFactory(
     id: string,
     type: ProvidersTypes,
     withValues: boolean = false
   ) {
-    const filteredProperties: MetaModel[] | [] = this.store.filter(
-      meta => meta.propertyKey && meta.id === id && meta.type === type
-    );
+    const filteredProperties = this.filterPropertiesByIdAndType(id, type);
 
-    let returnResults: [{ propertyKey: string; value: TVal }] | string[] = [];
+    let returnResults: [{ propertyKey: string; value: any }] | string[] = [];
 
     if (withValues) {
+      returnResults = this.getPropertiesKeysValues(filteredProperties) as
+        | [{ propertyKey: string; value: any }]
+        | [];
     }
 
     /// Get a collection properties keys
@@ -238,12 +251,40 @@ class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
   }
 
   /**
+   * Helper methods that abstracts mapping of properties keys with their values and and metakes
+   *
+   * @param filteredProperties A collection of MetaModel
+   * @returns a collection of properties names in a give target constructor
+   */
+  private getPropertiesKeysValues(filteredProperties: MetaModel[]) {
+    return filteredProperties.map(meta => ({
+      propertyKey: meta.propertyKey,
+      value: meta.value,
+      metaKey: meta.metaKey,
+    }));
+  }
+
+  /**
+   * A helper method that filters properties by their id and type
+   * @param id This is the unique id for the current target constructor
+   * @param type Unique identifier of every provider type.
+   * @returns Returns a filtered collection of all properties with the decorators
+   */
+  private filterPropertiesByIdAndType(id: string, type: ProvidersTypes) {
+    const filteredProperties: MetaModel[] | [] = this.store.filter(
+      meta => meta.propertyKey && meta.id === id && meta.type === type
+    );
+
+    return filteredProperties;
+  }
+
+  /**
    * Helper methods that abstracts process of filtering and mapping filtered properties to remove dublicates
    *
    * @param filteredProperties A collection of MetaModel
    * @returns a collection of properties names in a give target constructor
    */
-  getPropertiesKeysWithoutDublicates(filteredProperties: MetaModel[]) {
+  private getPropertiesKeysWithoutDublicates(filteredProperties: MetaModel[]) {
     if (filteredProperties && filteredProperties.length > 0) {
       /// Map only properties
       const mappedProperties = filteredProperties.map(

@@ -23,7 +23,7 @@ export const Controller = function () {
     //   genetatedId
     // );
 
-    const foundProperties = Meta.getPropertiesKeys(
+    const foundProperties = Meta.getPropertiesKeysMeta(
       targetId,
       ProvidersTypes.CONTROLLER
     );
