@@ -155,15 +155,15 @@ class IdManagerStore extends BaseStore<
 
   /**
    * Id generator based whether an id is generated or not
-   * @param providerType Based on MetaStoreTypes defination
+   * @param providerType Based on MetaStoreTypes definition
    * @param regenerateId Whether to regenerate a new ID or not. Used by controller
-   * @param regerateOptions Tracks pevious generated Id and current name of the controller
+   * @param regenerateOptions Tracks pervious generated Id and current name of the controller
    * @returns A random generated id
    */
   private generateIdFactory(
     providerType: ProvidersTypes,
     regenerateId?: boolean,
-    regerateOptions?: { type: ProvidersTypes; prevId: string; name: string }
+    regenerateOptions?: { type: ProvidersTypes; prevId: string; name: string }
   ) {
     /// Check if there's current provider id in the store
     const targetId = this.findId(providerType);
@@ -178,7 +178,7 @@ class IdManagerStore extends BaseStore<
     this.dispatch({
       id: generatedId,
       type: providerType,
-      ...(regerateOptions ? regerateOptions : {}),
+      ...(regenerateOptions ? regenerateOptions : {}),
     });
 
     return generatedId;
