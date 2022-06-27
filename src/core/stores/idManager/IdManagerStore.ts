@@ -8,20 +8,20 @@ class IdManagerStore extends BaseStore<
   IdManagerModel,
   Listener<IdManagerModel>
 > {
-  private static initilizer: IdManagerStore;
+  private static initializer: IdManagerStore;
 
   private targetId: string | boolean = false;
 
   /**
-   * Store initilizer
+   * Store initializer
    */
   static get init() {
-    if (!IdManagerStore.initilizer) {
-      IdManagerStore.initilizer = new IdManagerStore();
-      return IdManagerStore.initilizer;
+    if (!IdManagerStore.initializer) {
+      IdManagerStore.initializer = new IdManagerStore();
+      return IdManagerStore.initializer;
     }
 
-    return IdManagerStore.initilizer;
+    return IdManagerStore.initializer;
   }
 
   private constructor() {
@@ -29,7 +29,7 @@ class IdManagerStore extends BaseStore<
   }
 
   /**
-   * Finds previous generete id or current id if prev id matches the current ID
+   * Finds previous generate id or current id if prev id matches the current ID
    *
    * @param targetName A string of the name of the target constructor name
    *
@@ -96,12 +96,12 @@ class IdManagerStore extends BaseStore<
    * Use in all in-class decorators i.e. Property, accessors, and method generators.
    *
    * Also call it before running everything else in the base decorator.
-   * RouterConfigs Class generator will need the Id to identiry which controller to assign the route.
+   * RouterConfigs Class generator will need the Id to identify which controller to assign the route.
    *
-   * Do not use it in the other non-base docorators,
+   * Do not use it in the other non-base decorators,
    * unless you are working with a different decorators for it's inner workings.
    *
-   * @param providerType A type describing what service isusing the ID -
+   * @param providerType A type describing what service issuing the ID -
    * incase you have different services consuming the decorator
    * @returns  A random generated id
    */

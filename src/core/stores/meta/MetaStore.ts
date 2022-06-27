@@ -10,18 +10,18 @@ import {
 import { ManageId } from '../idManager';
 
 class MetaStore extends BaseStore<MetaModel, Listener<MetaModel>> {
-  private static initilizer: MetaStore;
+  private static initializer: MetaStore;
 
   /**
-   * Store initilizer
+   * Store initializer
    */
   static get init() {
-    if (!MetaStore.initilizer) {
-      MetaStore.initilizer = new MetaStore();
-      return MetaStore.initilizer;
+    if (!MetaStore.initializer) {
+      MetaStore.initializer = new MetaStore();
+      return MetaStore.initializer;
     }
 
-    return MetaStore.initilizer;
+    return MetaStore.initializer;
   }
 
   constructor() {
