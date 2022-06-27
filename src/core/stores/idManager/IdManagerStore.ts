@@ -38,11 +38,22 @@ class IdManagerStore extends BaseStore<
    * @returns Previous base Controller Id or false if the current Id in store have a prev id
    */
   findCurrentId(providerType: ProvidersTypes, targetName: string) {
-    const foundTargetName = this.findTargetName(providerType, targetName);
+    let foundTargetName: string | boolean | undefined = '';
+    if (targetName) {
+      foundTargetName = this.findTargetName(providerType, targetName);
+    }
 
-    return foundTargetName
-      ? this.findPrevId(providerType)
-      : this.findId(providerType);
+    const prevId = this.findPrevId(providerType);
+
+    if (!!foundTargetName && prevId) {
+      return prevId;
+    }
+
+    if (prevId && !foundTargetName) {
+      return prevId;
+    }
+
+    return this.findId(providerType);
   }
 
   /**
